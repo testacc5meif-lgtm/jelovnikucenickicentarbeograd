@@ -6,11 +6,20 @@ import { env } from '$env/dynamic/private';
 let sacuvanJelovnik: any = null;
 let sacuvanPdfLink: string = '';
 
-// Dodato ': any' da TypeScript prestane da traži skrivene fajlove
+// 🛠️ NOVO: Funkcija za posrednika (Proxy) da zaobiđemo blokadu sajta
+const iskoristiProxy = (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+
+// 🛠️ NOVO: Lažni potpis pregledača
+const lazniHederi = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+};
+
 export const load = async ({ fetch }: any) => {
     try {
-        const adresa = 'https://www.ucenickicentar-bg.rs/sluzba-ishrane/';
-        const odgovor = await fetch(adresa);
+        const originalnaAdresa = 'https://www.ucenickicentar-bg.rs/sluzba-ishrane/';
+        
+        // 🛠️ IZMENJENO: Sada fetch ide preko proxy-ja i sa lažnim hederima
+        const odgovor = await fetch(iskoristiProxy(originalnaAdresa), { headers: lazniHederi });
         if (!odgovor.ok) return { uspesno: false };
 
         const html = await odgovor.text();
@@ -27,14 +36,15 @@ export const load = async ({ fetch }: any) => {
 
         if (!aktuelniLink) return { uspesno: false };
 
-        // Ako imamo isti PDF u kešu, vraćamo ga odmah
         if (aktuelniLink === sacuvanPdfLink && sacuvanJelovnik) {
             console.log("⚡ Vraćam jelovnik iz memorije (Brzina svetlosti)!");
             return { uspesno: true, jelovnik: sacuvanJelovnik, pdfLink: aktuelniLink };
         }
 
         console.log("📄 Novi PDF pronađen! Šaljem Geminiju na čitanje...");
-        const pdfOdgovor = await fetch(aktuelniLink);
+        
+        // 🛠️ IZMENJENO: I sam PDF moramo da skinemo preko proxy-ja da nas ne bi blokirali
+        const pdfOdgovor = await fetch(iskoristiProxy(aktuelniLink), { headers: lazniHederi });
         const arrayBuffer = await pdfOdgovor.arrayBuffer();
         
         // @ts-ignore
@@ -68,12 +78,10 @@ export const load = async ({ fetch }: any) => {
             ]
         });
 
-        // Obezbeđujemo se da uvek dobijemo čist tekst
         let sirovTekst = response.text || '';
         let jsonTekst = sirovTekst.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
         const procitanJelovnik = JSON.parse(jsonTekst);
 
-        // Čuvamo u memoriji
         sacuvanJelovnik = procitanJelovnik;
         sacuvanPdfLink = aktuelniLink;
 
@@ -85,7 +93,6 @@ export const load = async ({ fetch }: any) => {
 
     } catch (e) {
         console.error("Greška na serveru:", e);
-        // Ako AI pukne, vrati stari keširani ako postoji
         if (sacuvanJelovnik) return { uspesno: true, jelovnik: sacuvanJelovnik, pdfLink: sacuvanPdfLink };
         return { uspesno: false, jelovnik: null };
     }
