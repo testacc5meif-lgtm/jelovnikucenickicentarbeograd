@@ -2,7 +2,7 @@ import * as cheerio from 'cheerio';
 import { GoogleGenAI } from '@google/genai';
 import { env } from '$env/dynamic/private';
 
-// Keš memorija servera
+// Keš memorija serveras
 let sacuvanJelovnik: any = null;
 let sacuvanPdfLink: string = '';
 
