@@ -7,7 +7,7 @@ let sacuvanJelovnik: any = null;
 let sacuvanPdfLink: string = '';
 
 // 🛠️ NOVO: Funkcija za posrednika (Proxy) da zaobiđemo blokadu sajta
-const iskoristiProxy = (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+cconst iskoristiProxy = (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`;
 
 // 🛠️ NOVO: Lažni potpis pregledača
 const lazniHederi = {
