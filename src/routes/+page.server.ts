@@ -18,7 +18,7 @@ const lazniHederi = {
     'Referer': 'https://www.ucenickicentar-bg.rs/'
 };
 
-export const load = async ({ fetch }: any) => {
+export const load = async ({ fetch, setHeaders }: any) => {
     try {
         console.log("=== 🚀 KREĆEMO: Server započinje posao ===");
         const originalnaAdresa = 'https://www.ucenickicentar-bg.rs/sluzba-ishrane/';
@@ -49,6 +49,12 @@ export const load = async ({ fetch }: any) => {
 
         if (aktuelniLink === sacuvanPdfLink && sacuvanJelovnik) {
             console.log("⚡ Vraćam jelovnik iz memorije!");
+            
+            // 🛡️ NOVO: Govorimo Vercelu da kešira i ovaj brzi odgovor
+            setHeaders({
+                'Cache-Control': 'public, s-maxage=14400, stale-while-revalidate=86400'
+            });
+
             return { uspesno: true, jelovnik: sacuvanJelovnik, pdfLink: aktuelniLink };
         }
 
@@ -104,6 +110,13 @@ export const load = async ({ fetch }: any) => {
         sacuvanPdfLink = aktuelniLink;
 
         console.log("✅ KORAK 6: SVE JE USPEŠNO ZAVRŠENO!");
+
+        // 🛡️ NOVO: Magična linija koja štiti tvoj API ključ od zagušenja!
+        // Vercel će sada zapamtiti ovaj uspeh i svima ga prikazivati naredna 4 sata (14400 sekundi)
+        setHeaders({
+            'Cache-Control': 'public, s-maxage=14400, stale-while-revalidate=86400'
+        });
+
         return {
             uspesno: true,
             jelovnik: sacuvanJelovnik,
