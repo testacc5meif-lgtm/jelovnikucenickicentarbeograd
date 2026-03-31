@@ -8,7 +8,10 @@ export const prerender = false;
 let sacuvanJelovnik: any = null;
 let sacuvanPdfLink: string = '';
 
-const iskoristiProxy = (url: string) => `https://api.codetabs.com/v1/proxy?quest=${url}`;
+// 🏆 POBEDNIČKA KOMBINACIJA: Dva različita posrednika za dva različita posla!
+const proxyZaHtml = (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+const proxyZaPdf = (url: string) => `https://api.codetabs.com/v1/proxy?quest=${url}`;
+
 const lazniHederi = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
 };
@@ -18,8 +21,8 @@ export const load = async ({ fetch }: any) => {
         console.log("=== 🚀 KREĆEMO: Server započinje posao ===");
         const originalnaAdresa = 'https://www.ucenickicentar-bg.rs/sluzba-ishrane/';
         
-        console.log("👉 KORAK 1: Tražim glavni sajt preko proxy-ja...");
-        const odgovor = await fetch(iskoristiProxy(originalnaAdresa), { headers: lazniHederi });
+        console.log("👉 KORAK 1: Tražim glavni sajt preko AllOrigins proxy-ja...");
+        const odgovor = await fetch(proxyZaHtml(originalnaAdresa), { headers: lazniHederi });
         
         if (!odgovor.ok) {
             console.error("❌ PAD NA KORAKU 1: Proxy ili sajt je blokirao pristup! Status koda:", odgovor.status);
@@ -50,8 +53,8 @@ export const load = async ({ fetch }: any) => {
             return { uspesno: true, jelovnik: sacuvanJelovnik, pdfLink: aktuelniLink };
         }
 
-        console.log("👉 KORAK 3: Skidam PDF fajl...");
-        const pdfOdgovor = await fetch(iskoristiProxy(aktuelniLink), { headers: lazniHederi });
+        console.log("👉 KORAK 3: Skidam PDF fajl preko CodeTabs proxy-ja...");
+        const pdfOdgovor = await fetch(proxyZaPdf(aktuelniLink), { headers: lazniHederi });
         
         if (!pdfOdgovor.ok) {
              console.error("❌ PAD NA KORAKU 3: Ne mogu da skinem PDF! Status koda:", pdfOdgovor.status);
