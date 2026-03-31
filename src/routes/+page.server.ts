@@ -8,7 +8,7 @@ export const prerender = false;
 let sacuvanJelovnik: any = null;
 let sacuvanPdfLink: string = '';
 
-const iskoristiProxy = (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`;
+const iskoristiProxy = (url: string) => `https://api.codetabs.com/v1/proxy?quest=${url}`;
 const lazniHederi = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
 };
