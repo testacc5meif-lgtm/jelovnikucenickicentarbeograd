@@ -55,9 +55,9 @@
 </script>
 
 <main>
-<div class="logo-container">
-    <img src="/logo.png" alt="Logo Učenički Centar Jelovnik" class="app-logo">
-</div>
+    <div class="logo-container">
+        <img src="/logo.png" alt="Logo Učenički Centar Jelovnik" class="app-logo">
+    </div>
     <h1 class="naslov">🏛️ Ученички Центар - Јеловник</h1>
 
     <div class="padajuci-meni-okvir">
@@ -95,6 +95,10 @@
             </p>
         {/if}
     {/if}
+
+    <div class="disclaimer">
+        <p>⚠️ Ова апликација је независни пројекат и није званична апликација Ученичког центра Београд. Јеловник се аутоматски преузима са њиховог званичног сајта.</p>
+    </div>
 </main>
 
 <style>
@@ -173,7 +177,6 @@
     .link-okvir { text-align: center; margin-top: 30px; }
     .pdf-link { color: var(--tekst); text-decoration: none; font-weight: bold; background: var(--link-pozadina); padding: 10px 20px; border-radius: 20px; }
     
-    /* Novi kod za logo spojen sa ostalim stilovima */
     .logo-container {
         display: flex;
         justify-content: center;
@@ -183,5 +186,16 @@
     .app-logo {
         max-width: 150px; 
         height: auto;
+    }
+
+    /* NOVO: Stilovi za disclaimer */
+    .disclaimer {
+        margin-top: 50px;
+        padding-top: 20px;
+        border-top: 1px solid var(--ivica);
+        text-align: center;
+        font-size: 11px;
+        color: var(--podtekst);
+        line-height: 1.5;
     }
 </style>
