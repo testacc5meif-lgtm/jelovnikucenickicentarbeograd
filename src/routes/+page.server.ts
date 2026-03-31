@@ -2,7 +2,6 @@ import * as cheerio from 'cheerio';
 import { GoogleGenAI } from '@google/genai';
 import { env } from '$env/dynamic/private';
 
-// 🛑 MAGIČNA LINIJA: Zabranjujemo statično keširanje greške!
 export const prerender = false;
 
 // Keš memorija servera
@@ -10,19 +9,22 @@ let sacuvanJelovnik: any = null;
 let sacuvanPdfLink: string = '';
 
 const iskoristiProxy = (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`;
-
-// ... (ostatak koda ostaje isti)
 const lazniHederi = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
 };
 
 export const load = async ({ fetch }: any) => {
     try {
+        console.log("=== 🚀 KREĆEMO: Server započinje posao ===");
         const originalnaAdresa = 'https://www.ucenickicentar-bg.rs/sluzba-ishrane/';
         
-        // 🛠️ IZMENJENO: Sada fetch ide preko proxy-ja i sa lažnim hederima
+        console.log("👉 KORAK 1: Tražim glavni sajt preko proxy-ja...");
         const odgovor = await fetch(iskoristiProxy(originalnaAdresa), { headers: lazniHederi });
-        if (!odgovor.ok) return { uspesno: false };
+        
+        if (!odgovor.ok) {
+            console.error("❌ PAD NA KORAKU 1: Proxy ili sajt je blokirao pristup! Status koda:", odgovor.status);
+            return { uspesno: false };
+        }
 
         const html = await odgovor.text();
         const $ = cheerio.load(html);
@@ -36,22 +38,32 @@ export const load = async ({ fetch }: any) => {
             }
         });
 
-        if (!aktuelniLink) return { uspesno: false };
+        console.log("👉 KORAK 2: Pronađen PDF link:", aktuelniLink);
+
+        if (!aktuelniLink) {
+            console.error("❌ PAD NA KORAKU 2: Nije pronađen PDF link unutar HTML-a!");
+            return { uspesno: false };
+        }
 
         if (aktuelniLink === sacuvanPdfLink && sacuvanJelovnik) {
-            console.log("⚡ Vraćam jelovnik iz memorije (Brzina svetlosti)!");
+            console.log("⚡ Vraćam jelovnik iz brze memorije (keš)!");
             return { uspesno: true, jelovnik: sacuvanJelovnik, pdfLink: aktuelniLink };
         }
 
-        console.log("📄 Novi PDF pronađen! Šaljem Geminiju na čitanje...");
-        
-        // 🛠️ IZMENJENO: I sam PDF moramo da skinemo preko proxy-ja da nas ne bi blokirali
+        console.log("👉 KORAK 3: Skidam PDF fajl...");
         const pdfOdgovor = await fetch(iskoristiProxy(aktuelniLink), { headers: lazniHederi });
+        
+        if (!pdfOdgovor.ok) {
+             console.error("❌ PAD NA KORAKU 3: Ne mogu da skinem PDF! Status koda:", pdfOdgovor.status);
+             return { uspesno: false };
+        }
+
         const arrayBuffer = await pdfOdgovor.arrayBuffer();
         
         // @ts-ignore
         const base64Pdf = Buffer.from(arrayBuffer).toString('base64');
 
+        console.log("👉 KORAK 4: PDF uspešno skinut! Šaljem Geminiju na čitanje...");
         const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY });
         
         const prompt = `Ti si stručnjak za obradu dokumenata. Ovo je PDF jelovnika za učenički centar.
@@ -80,6 +92,7 @@ export const load = async ({ fetch }: any) => {
             ]
         });
 
+        console.log("👉 KORAK 5: Gemini je pročitao i vratio tekst!");
         let sirovTekst = response.text || '';
         let jsonTekst = sirovTekst.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
         const procitanJelovnik = JSON.parse(jsonTekst);
@@ -87,6 +100,7 @@ export const load = async ({ fetch }: any) => {
         sacuvanJelovnik = procitanJelovnik;
         sacuvanPdfLink = aktuelniLink;
 
+        console.log("✅ KORAK 6: SVE JE USPEŠNO ZAVRŠENO!");
         return {
             uspesno: true,
             jelovnik: sacuvanJelovnik,
@@ -94,7 +108,7 @@ export const load = async ({ fetch }: any) => {
         };
 
     } catch (e) {
-        console.error("Greška na serveru:", e);
+        console.error("❌ KATASTROFA NA SERVERU (Catch blok):", e);
         if (sacuvanJelovnik) return { uspesno: true, jelovnik: sacuvanJelovnik, pdfLink: sacuvanPdfLink };
         return { uspesno: false, jelovnik: null };
     }
