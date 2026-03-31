@@ -2,12 +2,16 @@ import * as cheerio from 'cheerio';
 import { GoogleGenAI } from '@google/genai';
 import { env } from '$env/dynamic/private';
 
-// Keš memorija serveras
+// 🛑 MAGIČNA LINIJA: Zabranjujemo statično keširanje greške!
+export const prerender = false;
+
+// Keš memorija servera
 let sacuvanJelovnik: any = null;
 let sacuvanPdfLink: string = '';
 
 const iskoristiProxy = (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`;
 
+// ... (ostatak koda ostaje isti)
 const lazniHederi = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
 };
