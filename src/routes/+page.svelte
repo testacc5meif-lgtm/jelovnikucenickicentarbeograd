@@ -172,4 +172,16 @@
     .nema-hrane { text-align: center; font-weight: bold; margin-top: 50px; }
     .link-okvir { text-align: center; margin-top: 30px; }
     .pdf-link { color: var(--tekst); text-decoration: none; font-weight: bold; background: var(--link-pozadina); padding: 10px 20px; border-radius: 20px; }
+    
+    /* Novi kod za logo spojen sa ostalim stilovima */
+    .logo-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+        margin-top: 10px;
+    }
+    .app-logo {
+        max-width: 150px; 
+        height: auto;
+    }
 </style>
