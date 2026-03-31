@@ -55,6 +55,9 @@
 </script>
 
 <main>
+<div class="logo-container">
+    <img src="/logo.png" alt="Logo Učenički Centar Jelovnik" class="app-logo">
+</div>
     <h1 class="naslov">🏛️ Ученички Центар - Јеловник</h1>
 
     <div class="padajuci-meni-okvir">
