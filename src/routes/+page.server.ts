@@ -8,14 +8,12 @@ export const prerender = false;
 let sacuvanJelovnik: any = null;
 let sacuvanPdfLink: string = '';
 
-// Proxy koristimo SAMO za čitanje teksta/HTML-a da nas ne bi blokirali
-const proxyZaHtml = (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
-
-// Maskiramo se u pravi pregledač
+// Maskiramo se u pravog korisnika još ubedljivije
 const lazniHederi = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    'Accept': 'application/pdf',
-    'Referer': 'https://www.ucenickicentar-bg.rs/'
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+    'Accept-Language': 'sr-RS,sr;q=0.9,en-US;q=0.8,en;q=0.7',
+    'Referer': 'https://www.google.com/'
 };
 
 export const load = async ({ fetch, setHeaders }: any) => {
@@ -23,11 +21,13 @@ export const load = async ({ fetch, setHeaders }: any) => {
         console.log("=== 🚀 KREĆEMO: Server započinje posao ===");
         const originalnaAdresa = 'https://www.ucenickicentar-bg.rs/sluzba-ishrane/';
         
-        console.log("👉 KORAK 1: Tražim HTML sajta preko proxy-ja...");
-        const odgovor = await fetch(proxyZaHtml(originalnaAdresa), { headers: lazniHederi });
+        console.log("👉 KORAK 1: Tražim HTML sajta DIREKTNO (bez posrednika)...");
+        
+        // 🏆 KLJUČNA IZMENA: Izbacili smo proxy! Kucamo direktno na njihov sajt.
+        const odgovor = await fetch(originalnaAdresa, { headers: lazniHederi });
         
         if (!odgovor.ok) {
-            console.error("❌ PAD NA KORAKU 1");
+            console.error("❌ PAD NA KORAKU 1: Sajt je blokirao direktan pristup. Status koda:", odgovor.status);
             return { uspesno: false };
         }
 
@@ -49,17 +49,13 @@ export const load = async ({ fetch, setHeaders }: any) => {
 
         if (aktuelniLink === sacuvanPdfLink && sacuvanJelovnik) {
             console.log("⚡ Vraćam jelovnik iz memorije!");
-            
-            // 🛡️ NOVO: Govorimo Vercelu da kešira i ovaj brzi odgovor
             setHeaders({
                 'Cache-Control': 'public, s-maxage=14400, stale-while-revalidate=86400'
             });
-
             return { uspesno: true, jelovnik: sacuvanJelovnik, pdfLink: aktuelniLink };
         }
 
-        console.log("👉 KORAK 3: Skidam PDF DIREKTNO (bez proxy-ja da ga ne oštetimo)...");
-        // 🏆 KLJUČNA IZMENA: Ovde preuzimamo PDF direktno!
+        console.log("👉 KORAK 3: Skidam PDF DIREKTNO...");
         const pdfOdgovor = await fetch(aktuelniLink, { headers: lazniHederi });
         
         if (!pdfOdgovor.ok) {
@@ -111,8 +107,6 @@ export const load = async ({ fetch, setHeaders }: any) => {
 
         console.log("✅ KORAK 6: SVE JE USPEŠNO ZAVRŠENO!");
 
-        // 🛡️ NOVO: Magična linija koja štiti tvoj API ključ od zagušenja!
-        // Vercel će sada zapamtiti ovaj uspeh i svima ga prikazivati naredna 4 sata (14400 sekundi)
         setHeaders({
             'Cache-Control': 'public, s-maxage=14400, stale-while-revalidate=86400'
         });
