@@ -108,42 +108,13 @@
         color: var(--tekst);
         margin: 0;
         transition: background-color 0.3s ease, color 0.3s ease;
-        position: relative; /* Dodato da bi animacija pozadine radila */
-        min-height: 100vh;
-    }
-
-    /* 🚀 FUTURISTIČKA MREŽA KOJA SE POMERA */
-    :global(body::before) {
-        content: "";
-        position: fixed;
-        top: 0; 
-        left: 0; 
-        width: 100vw; 
-        height: 100vh;
-        z-index: -1; /* Gura pokretne linije skroz u pozadinu, iza svega */
-        pointer-events: none; /* Sprečava da mreža blokira kliktanje prstom */
-        
-        /* Crtanje linija */
-        background-image: 
-            linear-gradient(var(--linija-mreza) 1px, transparent 1px),
-            linear-gradient(90deg, var(--linija-mreza) 1px, transparent 1px);
-        background-size: 50px 50px; /* Veličina kockica u mreži */
-        
-        /* Magija pomeranja */
-        animation: pomeranjeMreze 20s linear infinite;
-    }
-
-    /* Kako se tačno mreža pomera (beskonačan skrol dijagonalno) */
-    @keyframes pomeranjeMreze {
-        0% { background-position: 0 0; }
-        100% { background-position: 50px 50px; }
     }
 
     /* SVETLA TEMA (Podrazumevana) */
     :root {
-        --pozadina: #f4f6f9; /* Malo sivkastija da bi se videle bele kartice */
+        --pozadina: #ffffff;
         --tekst: #333333;
-        --kartica: #ffffff;
+        --kartica: #f8f9fa;
         --ivica: #007bff;
         --podtekst: #888888;
         --dugme-neaktivno: transparent;
@@ -156,17 +127,14 @@
         --rucak-tekst: #0c5460;
         --vecera-pozadina: #d4edda;
         --vecera-tekst: #155724;
-        
-        /* Boja pokretnih linija za svetlu temu (vrlo suptilna plava) */
-        --linija-mreza: rgba(0, 123, 255, 0.08);
     }
 
     /* TAMNA TEMA (Aktivira se automatski) */
     @media (prefers-color-scheme: dark) {
         :root {
-            --pozadina: #0f172a; /* Dublja noćna plava */
+            --pozadina: #121212;
             --tekst: #e0e0e0;
-            --kartica: #1e293b;
+            --kartica: #1e1e1e;
             --ivica: #4facfe;
             --podtekst: #aaaaaa;
             --dugme-neaktivno: transparent;
@@ -179,30 +147,27 @@
             --rucak-tekst: #77ddff;
             --vecera-pozadina: #153e1a;
             --vecera-tekst: #77ff88;
-            
-            /* Boja pokretnih linija za tamnu temu (jarka neon plava) */
-            --linija-mreza: rgba(79, 172, 254, 0.15);
         }
     }
 
-    /* OSTATAK STILOVA ZA APLIKACIJU */
+    /* KORIŠĆENJE VARIJABLI */
     main { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
     .naslov { text-align: center; color: var(--tekst); margin-bottom: 25px; }
-    
     .padajuci-meni-okvir { text-align: center; margin-bottom: 25px; }
-    .meni { background-color: var(--kartica); color: var(--tekst); padding: 12px; font-size: 16px; border-radius: 12px; border: 2px solid var(--ivica); width: 100%; max-width: 300px; text-align: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    .meni { background-color: var(--kartica); color: var(--tekst); padding: 12px; font-size: 16px; border-radius: 12px; border: 2px solid var(--ivica); width: 100%; max-width: 300px; text-align: center; cursor: pointer; }
     .meni-tekst { font-size: 12px; color: var(--podtekst); margin-top: 5px; }
     
     .kartica-greska { text-align: center; padding: 30px; background: #f8d7da; color: #721c24; border-radius: 15px; margin-top: 20px; border: 2px solid #f5c6cb; }
     
-    .dugmici-okvir { display: flex; gap: 5px; margin-bottom: 20px; background: var(--kartica); border-radius: 10px; padding: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+    .dugmici-okvir { display: flex; gap: 5px; margin-bottom: 20px; background: var(--kartica); border-radius: 10px; padding: 5px; }
     .tab-btn { flex: 1; padding: 12px 5px; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; transition: 0.2s; }
     
-    .dorucak-aktivan { background: var(--dorucak-pozadina); color: var(--dorucak-tekst); box-shadow: inset 0 0 10px rgba(0,0,0,0.05); }
-    .rucak-aktivan { background: var(--rucak-pozadina); color: var(--rucak-tekst); box-shadow: inset 0 0 10px rgba(0,0,0,0.05); }
-    .vecera-aktivan { background: var(--vecera-pozadina); color: var(--vecera-tekst); box-shadow: inset 0 0 10px rgba(0,0,0,0.05); }
+    .dorucak-aktivan { background: var(--dorucak-pozadina); color: var(--dorucak-tekst); }
+    .rucak-aktivan { background: var(--rucak-pozadina); color: var(--rucak-tekst); }
+    .vecera-aktivan { background: var(--vecera-pozadina); color: var(--vecera-tekst); }
     .neaktivan { background: var(--dugme-neaktivno); color: var(--dugme-tekst); }
     
+    /* 🛠️ Fiksirana visina i scroll */
     .hrana-okvir { 
         padding: 20px; 
         border-radius: 15px; 
@@ -213,14 +178,6 @@
         flex-direction: column; 
         justify-content: center; 
         transition: background-color 0.3s; 
-        /* Dodata blaga senka da bi se kartica izdvojila od animiranih linija */
-        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    }
-    
-    /* Senka je malo jača u tamnoj temi */
-    @media (prefers-color-scheme: dark) {
-        .hrana-okvir { box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
-        .meni { box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
     }
 
     .hrana-okvir.doručak { background: var(--dorucak-pozadina); color: var(--dorucak-tekst); }
@@ -229,13 +186,29 @@
     
     ul { margin: 0; padding-left: 20px; font-size: 18px; line-height: 1.8; }
     .nema-hrane { text-align: center; font-weight: bold; margin-top: auto; margin-bottom: auto; }
-    
     .link-okvir { text-align: center; margin-top: 30px; }
-    .pdf-link { color: var(--tekst); text-decoration: none; font-weight: bold; background: var(--link-pozadina); padding: 10px 20px; border-radius: 20px; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-    .pdf-link:hover { opacity: 0.8; transform: translateY(-2px); }
+    .pdf-link { color: var(--tekst); text-decoration: none; font-weight: bold; background: var(--link-pozadina); padding: 10px 20px; border-radius: 20px; }
     
-    .logo-container { display: flex; justify-content: center; margin-bottom: 20px; margin-top: 10px; }
-    .app-logo { max-width: 150px; height: auto; }
+    .logo-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+        margin-top: 10px;
+    }
+    .app-logo {
+        max-width: 150px; 
+        height: auto;
+    }
 
-    .disclaimer { margin-top: 50px; padding-top: 20px; padding-bottom: 20px; border-top: 1px solid var(--ivica); text-align: center; font-size: 11px; color: var(--podtekst); line-height: 1.5; }
+    /* 🛠️ Dodat padding na dnu za disclaimer */
+    .disclaimer {
+        margin-top: 50px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        border-top: 1px solid var(--ivica);
+        text-align: center;
+        font-size: 11px;
+        color: var(--podtekst);
+        line-height: 1.5;
+    }
 </style>
