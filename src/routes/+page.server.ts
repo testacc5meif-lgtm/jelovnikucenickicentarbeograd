@@ -50,7 +50,7 @@ export const load = async ({ fetch, setHeaders }: any) => {
         if (aktuelniLink === sacuvanPdfLink && sacuvanJelovnik) {
             console.log("⚡ Vraćam jelovnik iz memorije!");
             setHeaders({
-                'Cache-Control': 'public, s-maxage=14400, stale-while-revalidate=86400'
+                'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=43200'
             });
             return { uspesno: true, jelovnik: sacuvanJelovnik, pdfLink: aktuelniLink };
         }
@@ -107,7 +107,7 @@ export const load = async ({ fetch, setHeaders }: any) => {
         console.log("✅ KORAK 6: SVE JE USPEŠNO ZAVRŠENO!");
 
         setHeaders({
-            'Cache-Control': 'public, s-maxage=14400, stale-while-revalidate=86400'
+            'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=43200'
         });
 
         return {
