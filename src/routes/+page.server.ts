@@ -77,7 +77,7 @@ export const load = async ({ fetch, setHeaders }: any) => {
         🚨 VAŽNA PRAVILA: 
         1. SPAJANJE HRANE: U PDF-u su komponente istog obroka spojene crticama ili se nalaze u istom bloku. MORAŠ da zadržiš te crtice! Nemoj da odvajaš svaku namirnicu posebno. Svaki element u JSON nizu treba da bude cela jedna opcija za obrok (npr. "čaj - pileća prsa - proja sa sirom").
         2. PAMETNA LEKTURA (ISPRAVLJANJE GREŠAKA): PDF dokumenti iz kojih čitaš često imaju greške u kucanju ili skeniranju (npr. piše "вође" umesto "воће", "сирче" umesto "сир" itd.). Tvoj zadatak je da prepoznaš te očigledne greške i ispraviš ih tako da nazivi hrane budu potpuno gramatički tačni i logični na srpskom jeziku pre nego što ih vratiš.
-        
+        3. ПИСМО (ЋИРИЛИЦА): Ако је текст у ПДФ-у на латиници, твој задатак је да све називе хране аутоматски пресловиш у српску ћирилицу (нпр. "pileća prsa" мора да постане "пилећа прса").
         Vrati ISKLJUČIVO validan JSON format, bez ikakvog dodatnog teksta ili markdown oznaka.
         Format mora izgledati tačno ovako:
         {
