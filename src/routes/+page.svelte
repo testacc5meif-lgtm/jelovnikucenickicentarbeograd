@@ -167,13 +167,25 @@
     .vecera-aktivan { background: var(--vecera-pozadina); color: var(--vecera-tekst); }
     .neaktivan { background: var(--dugme-neaktivno); color: var(--dugme-tekst); }
     
-    .hrana-okvir { padding: 20px; border-radius: 15px; min-height: 200px; transition: background-color 0.3s; }
+    /* 🛠️ OVO JE KLJUČNA IZMENA - Fiksirana visina i scroll */
+    .hrana-okvir { 
+        padding: 20px; 
+        border-radius: 15px; 
+        min-height: 350px; 
+        max-height: 450px; 
+        overflow-y: auto; 
+        display: flex; 
+        flex-direction: column; 
+        justify-content: center; 
+        transition: background-color 0.3s; 
+    }
+
     .hrana-okvir.doručak { background: var(--dorucak-pozadina); color: var(--dorucak-tekst); }
     .hrana-okvir.ručak { background: var(--rucak-pozadina); color: var(--rucak-tekst); }
     .hrana-okvir.večera { background: var(--vecera-pozadina); color: var(--vecera-tekst); }
     
     ul { margin: 0; padding-left: 20px; font-size: 18px; line-height: 1.8; }
-    .nema-hrane { text-align: center; font-weight: bold; margin-top: 50px; }
+    .nema-hrane { text-align: center; font-weight: bold; margin-top: auto; margin-bottom: auto; }
     .link-okvir { text-align: center; margin-top: 30px; }
     .pdf-link { color: var(--tekst); text-decoration: none; font-weight: bold; background: var(--link-pozadina); padding: 10px 20px; border-radius: 20px; }
     
@@ -188,10 +200,11 @@
         height: auto;
     }
 
-    /* NOVO: Stilovi za disclaimer */
+    /* 🛠️ OVO JE KLJUČNA IZMENA ZA DISCLAIMER - Dodat padding na dnu */
     .disclaimer {
         margin-top: 50px;
         padding-top: 20px;
+        padding-bottom: 20px;
         border-top: 1px solid var(--ivica);
         text-align: center;
         font-size: 11px;
