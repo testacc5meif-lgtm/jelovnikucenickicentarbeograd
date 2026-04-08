@@ -23,7 +23,6 @@ export const load = async ({ fetch, setHeaders }: any) => {
         
         console.log("👉 KORAK 1: Tražim HTML sajta DIREKTNO (bez posrednika)...");
         
-        // 🏆 KLJUČNA IZMENA: Izbacili smo proxy! Kucamo direktno na njihov sajt.
         const odgovor = await fetch(originalnaAdresa, { headers: lazniHederi });
         
         if (!odgovor.ok) {
@@ -89,9 +88,9 @@ export const load = async ({ fetch, setHeaders }: any) => {
           }
         }`;
 
-        // 🛠️ MAGIČNA IZMENA - Prelazimo na 2.0 da zaobiđemo dnevni limit!
+        // 🛠️ Vraćeno na jedini besplatni model koji radi (2.5)
         const response = await ai.models.generateContent({
-            model: 'gemini-2.0-flash', 
+            model: 'gemini-2.5-flash', 
             contents: [
                 prompt,
                 { inlineData: { data: base64Pdf, mimeType: 'application/pdf' } }
@@ -108,7 +107,6 @@ export const load = async ({ fetch, setHeaders }: any) => {
 
         console.log("✅ KORAK 6: SVE JE USPEŠNO ZAVRŠENO!");
 
-        // Agresivno keširanje (31536000 = 1 godina čuvanja starog dok se ne učita novi)
         setHeaders({
             'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=31536000'
         });
@@ -121,7 +119,6 @@ export const load = async ({ fetch, setHeaders }: any) => {
 
     } catch (e) {
         console.error("❌ KATASTROFA NA SERVERU (Catch blok):", e);
-        // Vraćamo false, jer će Vercel zbog stale-while-revalidate ionako prikazati poslednji dobar keš!
         return { uspesno: false, jelovnik: null };
     }
 };
