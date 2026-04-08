@@ -90,7 +90,7 @@ export const load = async ({ fetch, setHeaders }: any) => {
         }`;
 
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
+            model: 'gemini-1.5-flash', // 🛠️ OVO JE PROMENJENO
             contents: [
                 prompt,
                 { inlineData: { data: base64Pdf, mimeType: 'application/pdf' } }
