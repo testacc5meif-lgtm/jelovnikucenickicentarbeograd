@@ -89,9 +89,9 @@ export const load = async ({ fetch, setHeaders }: any) => {
           }
         }`;
 
-        // 🛠️ VRAĆENO NA 2.5
+        // 🛠️ MAGIČNA IZMENA - Prelazimo na 2.0 da zaobiđemo dnevni limit!
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash', 
+            model: 'gemini-2.0-flash', 
             contents: [
                 prompt,
                 { inlineData: { data: base64Pdf, mimeType: 'application/pdf' } }
