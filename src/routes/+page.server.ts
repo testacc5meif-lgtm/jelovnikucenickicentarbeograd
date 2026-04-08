@@ -50,7 +50,7 @@ export const load = async ({ fetch, setHeaders }: any) => {
         if (aktuelniLink === sacuvanPdfLink && sacuvanJelovnik) {
             console.log("⚡ Vraćam jelovnik iz memorije!");
             setHeaders({
-                'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=43200'
+                'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=31536000'
             });
             return { uspesno: true, jelovnik: sacuvanJelovnik, pdfLink: aktuelniLink };
         }
@@ -78,6 +78,7 @@ export const load = async ({ fetch, setHeaders }: any) => {
         1. SPAJANJE HRANE: U PDF-u su komponente istog obroka spojene crticama ili se nalaze u istom bloku. MORAŠ da zadržiš te crtice! Nemoj da odvajaš svaku namirnicu posebno. Svaki element u JSON nizu treba da bude cela jedna opcija za obrok (npr. "čaj - pileća prsa - proja sa sirom").
         2. PAMETNA LEKTURA (ISPRAVLJANJE GREŠAKA): PDF dokumenti iz kojih čitaš često imaju greške u kucanju ili skeniranju (npr. piše "вође" umesto "воће", "сирче" umesto "сир" itd.). Tvoj zadatak je da prepoznaš te očigledne greške i ispraviš ih tako da nazivi hrane budu potpuno gramatički tačni i logični na srpskom jeziku pre nego što ih vratiš.
         3. ПИСМО (ЋИРИЛИЦА): Ако је текст у ПДФ-у на латиници, твој задатак је да све називе хране аутоматски пресловиш у српску ћирилицу (нпр. "pileća prsa" мора да постане "пилећа прса").
+        
         Vrati ISKLJUČIVO validan JSON format, bez ikakvog dodatnog teksta ili markdown oznaka.
         Format mora izgledati tačno ovako:
         {
@@ -106,19 +107,20 @@ export const load = async ({ fetch, setHeaders }: any) => {
 
         console.log("✅ KORAK 6: SVE JE USPEŠNO ZAVRŠENO!");
 
+        // Agresivno keširanje (31536000 = 1 godina čuvanja starog dok se ne učita novi)
         setHeaders({
-            'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=43200'
+            'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=31536000'
         });
 
         return {
             uspesno: true,
-            jelovnik: sacuvanJelovnik,
+            jelovnik: procitanJelovnik,
             pdfLink: aktuelniLink
         };
 
     } catch (e) {
         console.error("❌ KATASTROFA NA SERVERU (Catch blok):", e);
-        if (sacuvanJelovnik) return { uspesno: true, jelovnik: sacuvanJelovnik, pdfLink: sacuvanPdfLink };
+        // Vraćamo false, jer će Vercel zbog stale-while-revalidate ionako prikazati poslednji dobar keš!
         return { uspesno: false, jelovnik: null };
     }
 };
